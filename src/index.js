@@ -1,59 +1,62 @@
-import './css/styles.css';
-import { fetchCountries } from './js/fetchCountries';
-import countryMarkupHbs from './templates/country.hbs';
-import countryListMarkupHbs from './templates/country-list.hbs';
-import Notiflix from 'notiflix';
+/*
+ * - Пагинация
+ *   - страница и кол-во на странице
+ * - Загружаем статьи при сабмите формы
+ * - Загружаем статьи при нажатии на кнопку «Загрузить еще»
+ * - Обновляем страницу в параметрах запроса
+ * - Рисуем статьи
+ * - Сброс значения при поиске по новому критерию
+ *
+ * https://newsapi.org/
+ * 4330ebfabc654a6992c2aa792f3173a3
+ * http://newsapi.org/v2/everything?q=cat&language=en&pageSize=5&page=1
+ */
 
-var debounce = require('lodash.debounce');
-const DEBOUNCE_DELAY = 300;
+import articlesTpl from './templates/articles.hbs';
+import './css/common.css';
+import NewsApiService from './js/news-service';
+import LoadMoreBtn from './js/components/load-more-btn';
+
 const refs = {
-    searchBox: document.querySelector("#search-box"),
-    countryList: document.querySelector(".country-list"),
-    countryInfo:document.querySelector(".country-info")
+  searchForm: document.querySelector('.js-search-form'),
+  articlesContainer: document.querySelector('.js-articles-container'),
+};
+const loadMoreBtn = new LoadMoreBtn({
+  selector: '[data-action="load-more"]',
+  hidden: true,
+});
+const newsApiService = new NewsApiService();
+
+refs.searchForm.addEventListener('submit', onSearch);
+loadMoreBtn.refs.button.addEventListener('click', fetchArticles);
+
+function onSearch(e) {
+  e.preventDefault();
+
+  newsApiService.query = e.currentTarget.elements.query.value;
+
+  if (newsApiService.query === '') {
+    return alert('Введи что-то нормальное');
+  }
+
+  loadMoreBtn.show();
+  newsApiService.resetPage();
+  clearArticlesContainer();
+  fetchArticles();
 }
 
-refs.searchBox.addEventListener("input",debounce(onSearchInput,DEBOUNCE_DELAY))
-
-function onSearchInput(e) { 
-    if (e.target.value !== "") {
-        const countryInput = e.target.value.trim()
-        fetchCountries(countryInput)
-            .then(r => lengthCheck(r))
-            .catch(error => clearAreaError())
-    }
-    else { 
-    clearArea()
-    }
-
-}
-function lengthCheck(r) { 
-    if (r.length > 10) {
-        Notiflix.Notify.info("Too many matches found. Please enter a more specific name.")
-    }
-    else { 
-        listMarkup(r)
-    }
+function fetchArticles() {
+  loadMoreBtn.disable();
+  newsApiService.fetchArticles().then(articles => {
+    appendArticlesMarkup(articles);
+    loadMoreBtn.enable();
+  });
 }
 
-function listMarkup(r) { 
-    if (r.length >= 2 && r.length <= 10) {
-        const markup = countryListMarkupHbs(r)
-        refs.countryList.innerHTML = markup
-        refs.countryInfo.innerHTML = ""
-    }
-    else { countryMarkup(r)}
+function appendArticlesMarkup(articles) {
+  refs.articlesContainer.insertAdjacentHTML('beforeend', articlesTpl(articles));
 }
 
-function countryMarkup(r) { 
-    refs.countryList.innerHTML = ""
-    const markup = countryMarkupHbs(r)
-    refs.countryInfo.innerHTML = markup
-}
-function clearArea() { 
-    refs.countryList.innerHTML = ""
-    refs.countryInfo.innerHTML = ""
-}
-function clearAreaError() { 
-    clearArea()
-    Notiflix.Notify.failure("Oops, there is no country with that name")
+function clearArticlesContainer() {
+  refs.articlesContainer.innerHTML = '';
 }
