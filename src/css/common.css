@@ -39,7 +39,7 @@ img {
 }
 
 /* Article List */
-.articles {
+.gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   grid-gap: 20px;
@@ -52,19 +52,19 @@ img {
   margin-bottom: 30px;
 }
 
-.articles li {
+.photo-card {
   height: 450px;
   overflow: hidden;
 }
 
-.articles img {
+.photo-card img {
   display: block;
   width: 100%;
   height: 200px;
   object-fit: cover;
 }
 
-.articles a {
+.info p {
   text-decoration: none;
   color: #2a2a2a;
 }

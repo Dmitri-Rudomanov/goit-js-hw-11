@@ -12,51 +12,51 @@
  * http://newsapi.org/v2/everything?q=cat&language=en&pageSize=5&page=1
  */
 
-import articlesTpl from './templates/articles.hbs';
+import galleryTpl from './templates/gallery.hbs';
 import './css/common.css';
-import NewsApiService from './js/news-service';
+import PicsApiService from './js/picture-service';
 import LoadMoreBtn from './js/components/load-more-btn';
 
 const refs = {
-  searchForm: document.querySelector('.js-search-form'),
-  articlesContainer: document.querySelector('.js-articles-container'),
+  searchForm: document.querySelector('.search-form'),
+  galleryContainer: document.querySelector('.gallery'),
 };
 const loadMoreBtn = new LoadMoreBtn({
   selector: '[data-action="load-more"]',
   hidden: true,
 });
-const newsApiService = new NewsApiService();
+const picsApiService = new PicsApiService();
 
 refs.searchForm.addEventListener('submit', onSearch);
-loadMoreBtn.refs.button.addEventListener('click', fetchArticles);
+loadMoreBtn.refs.button.addEventListener('click', fetchGallery);
 
 function onSearch(e) {
   e.preventDefault();
 
-  newsApiService.query = e.currentTarget.elements.query.value;
+  picsApiService.query = e.currentTarget.elements.query.value;
 
-  if (newsApiService.query === '') {
+  if (picsApiService.query === '') {
     return alert('Введи что-то нормальное');
   }
 
   loadMoreBtn.show();
-  newsApiService.resetPage();
-  clearArticlesContainer();
-  fetchArticles();
+  picsApiService.resetPage();
+  clearGalleryContainer();
+  fetchGallery();
 }
 
-function fetchArticles() {
+function fetchGallery() {
   loadMoreBtn.disable();
-  newsApiService.fetchArticles().then(articles => {
-    appendArticlesMarkup(articles);
+  picsApiService.fetchGallery().then(gallery => {
+    appendGalleryMarkup(gallery);
     loadMoreBtn.enable();
   });
 }
 
-function appendArticlesMarkup(articles) {
-  refs.articlesContainer.insertAdjacentHTML('beforeend', articlesTpl(articles));
+function appendGalleryMarkup(gallery) {
+  refs.galleryContainer.insertAdjacentHTML('beforeend', galleryTpl(gallery));
 }
 
-function clearArticlesContainer() {
-  refs.articlesContainer.innerHTML = '';
+function clearGalleryContainer() {
+  refs.galleryContainer.innerHTML = '';
 }
