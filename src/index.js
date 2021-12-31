@@ -16,6 +16,7 @@ import galleryTpl from './templates/gallery.hbs';
 import './css/common.css';
 import PicsApiService from './js/picture-service';
 import LoadMoreBtn from './js/components/load-more-btn';
+import Notiflix from 'notiflix';
 
 const refs = {
   searchForm: document.querySelector('.search-form'),
@@ -33,13 +34,12 @@ loadMoreBtn.refs.button.addEventListener('click', fetchGallery);
 function onSearch(e) {
   e.preventDefault();
 
-  picsApiService.query = e.currentTarget.elements.query.value;
+  picsApiService.query = e.currentTarget.elements.searchQuery.value;
 
   if (picsApiService.query === '') {
     return alert('Введи что-то нормальное');
   }
 
-  loadMoreBtn.show();
   picsApiService.resetPage();
   clearGalleryContainer();
   fetchGallery();
@@ -48,8 +48,15 @@ function onSearch(e) {
 function fetchGallery() {
   loadMoreBtn.disable();
   picsApiService.fetchGallery().then(gallery => {
-    appendGalleryMarkup(gallery);
-    loadMoreBtn.enable();
+    console.log(gallery)
+    if (gallery.length!== 0) {
+      loadMoreBtn.show();
+      appendGalleryMarkup(gallery);
+      loadMoreBtn.enable();
+      return
+    } 
+     Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
+    
   });
 }
 

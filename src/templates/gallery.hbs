@@ -1,12 +1,19 @@
 {{#each this}}
-  <li>
-    <a href="{{url}}" target="_blank" rel="noopener noreferrer">
-      <article>
-        <img src="{{urlToImage}}" alt="" width="480">
-        <h2>{{title}}</h2>
-        <p>Posted by: {{author}}</p>
-        <p>{{description}}</p>
-      </article>
-    </a>
-  </li>
+  <div class="photo-card">
+    <img src={{webformatURL}} alt={{tags}} loading="lazy" />
+    <div class="info">
+      <p class="info-item">
+        <b>Likes: {{likes}}</b>
+      </p>
+      <p class="info-item">
+        <b>Views: {{views}}</b>
+      </p>
+      <p class="info-item">
+        <b>Comments: {{comments}}</b>
+      </p>
+      <p class="info-item">
+        <b>Downloads: {{downloads}}</b>
+      </p>
+    </div>
+  </div>
 {{/each}}
