@@ -11,7 +11,7 @@ export default class PicsApiService {
   }
 
   fetchGallery() {
-    const url = `${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&lang=en&per_page=12&page=${this.page}&safesearch=true&orientation=horizontal&image_type=photo`;
+    const url = `${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&lang=en&per_page=40&page=${this.page}&safesearch=true&orientation=horizontal&image_type=photo`;
 
     return fetch(url)
       .then(response => response.json())
