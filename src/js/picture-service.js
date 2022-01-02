@@ -11,11 +11,13 @@ export default class PicsApiService {
   }
 
   fetchGallery() {
-    const url = `${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&lang=en&per_page=40&page=${this.page}&safesearch=true&orientation=horizontal&image_type=photo`;
+    const url = `${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&lang=en&per_page=20&page=${this.page}&safesearch=true&orientation=horizontal&image_type=photo`;
 
     return fetch(url)
       .then(response => response.json())
-      .then(({ hits }) => {
+      .then(({ hits,totalHits }) => {
+        console.log(hits)
+        console.log(totalHits)
         this.incrementPage();
         return hits
       })
