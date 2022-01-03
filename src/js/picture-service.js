@@ -8,6 +8,7 @@ export default class PicsApiService {
   constructor() {
     this.searchQuery = '';
     this.page = 1;
+    this.hitsCounter = 0;
   }
 
   fetchGallery() {
@@ -19,12 +20,20 @@ export default class PicsApiService {
         console.log(hits)
         console.log(totalHits)
         this.incrementPage();
-        return hits
+        return { hits,totalHits }
       })
   }
 
   incrementPage() {
     this.page += 1;
+  }
+
+  incrementHits(value) {
+    this.hitsCounter += value;
+  }
+  
+  resetHits() {
+    this.hitsCounter = 0;;
   }
 
   resetPage() {

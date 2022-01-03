@@ -37,22 +37,28 @@ function onSearch(e) {
   picsApiService.query = e.currentTarget.elements.searchQuery.value;
 
   if (picsApiService.query === '') {
-    return alert('Введи что-то нормальное');
+    Notiflix.Notify.failure('Please enter your search query');
+    return
   }
 
   picsApiService.resetPage();
+  picsApiService.resetHits();
   clearGalleryContainer();
   fetchGallery();
 }
 
 function fetchGallery() {
   loadMoreBtn.disable();
-  picsApiService.fetchGallery().then(gallery => {
-    console.log(gallery)
-    if (gallery.length!== 0) {
+  picsApiService.fetchGallery().then(({ hits,totalHits }) => {
+    console.log(hits)
+    if (hits.length !== 0) {
+      picsApiService.incrementHits(hits.length)
+      console.log(picsApiService.hitsCounter)
       loadMoreBtn.show();
-      appendGalleryMarkup(gallery);
+      console.log(totalHits)
+      appendGalleryMarkup(hits);
       loadMoreBtn.enable();
+      hitsCheck(totalHits,picsApiService.hitsCounter)
       return
     } 
      Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
@@ -66,4 +72,12 @@ function appendGalleryMarkup(gallery) {
 
 function clearGalleryContainer() {
   refs.galleryContainer.innerHTML = '';
+}
+
+function hitsCheck(totalHits, hitsCounter) { 
+  if (totalHits - hitsCounter <= 0) {
+    Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.")
+    loadMoreBtn.hide();
+  }
+  return
 }
