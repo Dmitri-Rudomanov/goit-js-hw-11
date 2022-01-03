@@ -1,16 +1,3 @@
-/*
- * - Пагинация
- *   - страница и кол-во на странице
- * - Загружаем статьи при сабмите формы
- * - Загружаем статьи при нажатии на кнопку «Загрузить еще»
- * - Обновляем страницу в параметрах запроса
- * - Рисуем статьи
- * - Сброс значения при поиске по новому критерию
- *
- * https://newsapi.org/
- * 4330ebfabc654a6992c2aa792f3173a3
- * http://newsapi.org/v2/everything?q=cat&language=en&pageSize=5&page=1
- */
 
 import galleryTpl from './templates/gallery.hbs';
 import './css/common.css';
