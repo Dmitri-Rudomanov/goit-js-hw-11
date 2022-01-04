@@ -4,6 +4,8 @@ import './css/common.css';
 import PicsApiService from './js/picture-service';
 import LoadMoreBtn from './js/components/load-more-btn';
 import Notiflix from 'notiflix';
+import SimpleLightbox from "simplelightbox";
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const refs = {
   searchForm: document.querySelector('.search-form'),
@@ -14,13 +16,13 @@ const loadMoreBtn = new LoadMoreBtn({
   hidden: true,
 });
 const picsApiService = new PicsApiService();
+let lightbox = new SimpleLightbox('.gallery a', { /* options */ });
 
 refs.searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.refs.button.addEventListener('click', fetchGallery);
 
 function onSearch(e) {
   e.preventDefault();
-
   picsApiService.query = e.currentTarget.elements.searchQuery.value;
 
   if (picsApiService.query === '') {
@@ -36,7 +38,7 @@ function onSearch(e) {
 }
 
 function fetchGallery() {
-  loadMoreBtn.disable();
+  loadMoreBtn.disable()
   picsApiService.fetchGallery()
     .then(({ hits,totalHits }) => {
       picsApiService.incrementPage();
