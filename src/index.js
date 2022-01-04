@@ -27,7 +27,8 @@ function onSearch(e) {
     Notiflix.Notify.failure('Please enter your search query');
     return
   }
-
+  picsApiService.fetchGallery()
+  .then(({ totalHits }) => Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`));
   picsApiService.resetPage();
   picsApiService.resetHits();
   clearGalleryContainer();
@@ -36,13 +37,15 @@ function onSearch(e) {
 
 function fetchGallery() {
   loadMoreBtn.disable();
-  picsApiService.fetchGallery().then(({ hits,totalHits }) => {
-    console.log(hits)
+  picsApiService.fetchGallery()
+    .then(({ hits,totalHits }) => {
+      picsApiService.incrementPage();
+      return { hits,totalHits }
+    })
+    .then(({ hits, totalHits }) => {
     if (hits.length !== 0) {
       picsApiService.incrementHits(hits.length)
-      console.log(picsApiService.hitsCounter)
       loadMoreBtn.show();
-      console.log(totalHits)
       appendGalleryMarkup(hits);
       loadMoreBtn.enable();
       hitsCheck(totalHits,picsApiService.hitsCounter)
