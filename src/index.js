@@ -16,7 +16,6 @@ const loadMoreBtn = new LoadMoreBtn({
   hidden: true,
 });
 const picsApiService = new PicsApiService();
-let lightbox = new SimpleLightbox('.gallery a', { /* options */ });
 
 refs.searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.refs.button.addEventListener('click', fetchGallery);
@@ -45,12 +44,13 @@ function fetchGallery() {
       return { hits,totalHits }
     })
     .then(({ hits, totalHits }) => {
-    if (hits.length !== 0) {
-      picsApiService.incrementHits(hits.length)
-      loadMoreBtn.show();
+      if (hits.length !== 0) {
       appendGalleryMarkup(hits);
+      galleryCheck()
+      picsApiService.incrementHits(hits.length)
+      hitsCheck(totalHits, picsApiService.hitsCounter)
+      loadMoreBtn.show();
       loadMoreBtn.enable();
-      hitsCheck(totalHits,picsApiService.hitsCounter)
       return
     } 
      Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
@@ -72,4 +72,11 @@ function hitsCheck(totalHits, hitsCounter) {
     loadMoreBtn.hide();
   }
   return
+}
+
+function galleryCheck() { 
+  var lightbox = new SimpleLightbox('.gallery a');
+  lightbox.on('show.simplelightbox', function () {
+    lightbox.refresh()
+  });
 }
