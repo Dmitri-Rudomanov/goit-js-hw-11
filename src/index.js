@@ -34,6 +34,7 @@ function onSearch(e) {
   picsApiService.resetHits();
   clearGalleryContainer();
   fetchGallery();
+
 }
 
 function fetchGallery() {
@@ -46,7 +47,6 @@ function fetchGallery() {
     .then(({ hits, totalHits }) => {
       if (hits.length !== 0) {
       appendGalleryMarkup(hits);
-      galleryCheck()
       picsApiService.incrementHits(hits.length)
       hitsCheck(totalHits, picsApiService.hitsCounter)
       loadMoreBtn.show();
@@ -60,6 +60,7 @@ function fetchGallery() {
 
 function appendGalleryMarkup(gallery) {
   refs.galleryContainer.insertAdjacentHTML('beforeend', galleryTpl(gallery));
+  galleryCheck()
 }
 
 function clearGalleryContainer() {
@@ -74,9 +75,8 @@ function hitsCheck(totalHits, hitsCounter) {
   return
 }
 
-function galleryCheck() { 
+function galleryCheck() {
   var lightbox = new SimpleLightbox('.gallery a');
-  lightbox.on('show.simplelightbox', function () {
-    lightbox.refresh()
-  });
+  lightbox.refresh()
 }
+
