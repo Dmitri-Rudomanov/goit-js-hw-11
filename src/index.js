@@ -47,7 +47,8 @@ function fetchGallery() {
     .then(({ hits, totalHits }) => {
       if (hits.length !== 0) {
       appendGalleryMarkup(hits);
-      lightbox.refresh()
+        lightbox.refresh()
+        smoothScroll();
       picsApiService.incrementHits(hits.length)
       hitsCheck(totalHits, picsApiService.hitsCounter)
       loadMoreBtn.show();
@@ -75,4 +76,11 @@ function hitsCheck(totalHits, hitsCounter) {
   return
 }
 
-
+function smoothScroll() { 
+  const { height: cardHeight } = refs.galleryContainer.firstElementChild.getBoundingClientRect();
+  
+  window.scrollBy({
+  top: cardHeight * 2,
+  behavior: 'smooth',
+});
+}
