@@ -16,6 +16,7 @@ const loadMoreBtn = new LoadMoreBtn({
   hidden: true,
 });
 const picsApiService = new PicsApiService();
+var lightbox = new SimpleLightbox('.gallery a')
 
 refs.searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.refs.button.addEventListener('click', fetchGallery);
@@ -34,7 +35,6 @@ function onSearch(e) {
   picsApiService.resetHits();
   clearGalleryContainer();
   fetchGallery();
-
 }
 
 function fetchGallery() {
@@ -47,6 +47,7 @@ function fetchGallery() {
     .then(({ hits, totalHits }) => {
       if (hits.length !== 0) {
       appendGalleryMarkup(hits);
+      lightbox.refresh()
       picsApiService.incrementHits(hits.length)
       hitsCheck(totalHits, picsApiService.hitsCounter)
       loadMoreBtn.show();
@@ -60,7 +61,6 @@ function fetchGallery() {
 
 function appendGalleryMarkup(gallery) {
   refs.galleryContainer.insertAdjacentHTML('beforeend', galleryTpl(gallery));
-  galleryCheck()
 }
 
 function clearGalleryContainer() {
@@ -75,8 +75,4 @@ function hitsCheck(totalHits, hitsCounter) {
   return
 }
 
-function galleryCheck() {
-  var lightbox = new SimpleLightbox('.gallery a');
-  lightbox.refresh()
-}
 
