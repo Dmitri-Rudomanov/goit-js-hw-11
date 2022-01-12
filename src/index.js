@@ -29,8 +29,8 @@ function onSearch(e) {
     Notiflix.Notify.failure('Please enter your search query');
     return
   }
-  picsApiService.fetchGallery()
-  .then(({ totalHits }) => Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`));
+  picsApiService.fetchMoreGallery()
+    .then(({ totalHits }) => { if (totalHits > 0) { Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)}});
   picsApiService.resetPage();
   picsApiService.resetHits();
   clearGalleryContainer();
@@ -39,7 +39,7 @@ function onSearch(e) {
 
 function fetchGallery() {
   loadMoreBtn.disable()
-  picsApiService.fetchGallery()
+  picsApiService.fetchMoreGallery()
     .then(({ hits,totalHits }) => {
       picsApiService.incrementPage();
       return { hits,totalHits }
@@ -47,12 +47,12 @@ function fetchGallery() {
     .then(({ hits, totalHits }) => {
       if (hits.length !== 0) {
       appendGalleryMarkup(hits);
-        lightbox.refresh()
-        smoothScroll();
+      lightbox.refresh()
       picsApiService.incrementHits(hits.length)
-      hitsCheck(totalHits, picsApiService.hitsCounter)
+      smoothScroll(picsApiService.hitsCounter);
       loadMoreBtn.show();
       loadMoreBtn.enable();
+      hitsCheck(totalHits, picsApiService.hitsCounter)
       return
     } 
      Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
@@ -76,11 +76,15 @@ function hitsCheck(totalHits, hitsCounter) {
   return
 }
 
-function smoothScroll() { 
+function smoothScroll(hits) { 
+  if (hits > picsApiService.perPage) { 
   const { height: cardHeight } = refs.galleryContainer.firstElementChild.getBoundingClientRect();
-  
+  console.log({ height: cardHeight })
+
   window.scrollBy({
   top: cardHeight * 2,
   behavior: 'smooth',
 });
+  }
+  return
 }
