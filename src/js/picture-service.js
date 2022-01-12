@@ -14,7 +14,6 @@ export default class PicsApiService {
 
   async fetchMoreGallery() {
     const url = `${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&lang=en&per_page=${this.perPage}&page=${this.page}&safesearch=true&orientation=horizontal&image_type=photo`;
-
     const response = await axios.get(url);
     const items = await response.data;
     return items
