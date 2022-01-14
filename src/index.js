@@ -30,7 +30,7 @@ function onSearch(e) {
     return
   }
   picsApiService.fetchMoreGallery()
-    .then(({ totalHits }) => { if (totalHits > 0) { Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)}});
+  .then(({ totalHits }) => { if (totalHits > 0) { Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)}});
   picsApiService.resetPage();
   picsApiService.resetHits();
   clearGalleryContainer();
@@ -54,9 +54,9 @@ function fetchGallery() {
       loadMoreBtn.enable();
       hitsCheck(totalHits, picsApiService.hitsCounter)
       return
-    } 
-     Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
-    
+      }
+      loadMoreBtn.hide()
+      Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
   });
 }
 
