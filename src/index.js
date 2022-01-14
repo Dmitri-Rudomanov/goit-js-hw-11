@@ -21,9 +21,6 @@ var lightbox = new SimpleLightbox('.gallery a')
 refs.searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.refs.button.addEventListener('click', fetchGallery);
 
-loadMoreBtn.hide()
-loadMoreBtn.disable()
-
 function onSearch(e) {
   e.preventDefault();
   picsApiService.query = e.currentTarget.elements.searchQuery.value;
