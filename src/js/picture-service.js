@@ -8,7 +8,7 @@ export default class PicsApiService {
   constructor() {
     this.searchQuery = '';
     this.page = 1;
-    this.perPage = 20;
+    this.perPage = 40;
     this.hitsCounter = 0;
   }
 
