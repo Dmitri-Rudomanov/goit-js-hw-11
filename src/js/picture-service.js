@@ -28,7 +28,7 @@ export default class PicsApiService {
   }
   
   resetHits() {
-    this.hitsCounter = 0;;
+    this.hitsCounter = 0;
   }
 
   resetPage() {
